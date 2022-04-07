@@ -1,7 +1,9 @@
 import re
 
 # Get answer
-answer_characters = ["A","N","S", "W", "E", "R"]
+answer_characters = "What's Up, Doc?"
+
+answer_characters = answer_characters.upper()
 
 # Store known or unknown letters
 answer_guesses = []
@@ -14,14 +16,14 @@ for current_answer_character in answer_characters:
     answer_guesses.append(True)
 
 # Logic of playing the game
-guessed_letter = []
+guessed_letters = []
 num_of_incorrect_guesses = 0
 
-while num_of_incorrect_guesses < 5 or False in answer_guesses:
-  print("-----------------")
+while num_of_incorrect_guesses < 5 and False in answer_guesses:
+  print("------------------------")
   print("Guessed Letters: ", end = "")
 
-  for current_guessed_letter in guessed_letter:
+  for current_guessed_letter in guessed_letters:
     print(f"{current_guessed_letter}", end = "")
 
   print()
@@ -36,13 +38,26 @@ while num_of_incorrect_guesses < 5 or False in answer_guesses:
     else:
       print("_", end = "")
 
-print()
+  print()
+  print()
 
-letter = input("Enter a letter: ")
+  letter = input("Enter a letter: ")
 
-letter = letter.upper()
+  letter = letter.upper()
 
-if letter not in guessed_letter:
-  pass
-  
-print("-----------------")
+  if letter not in guessed_letters and len(letter) == 1 and re.search("^[A-Z]$", letter):
+    if letter in answer_characters:
+      #Letter is in the puzzle.
+      for current_answer_index in range(len(answer_characters)):
+        if letter == answer_characters[current_answer_index]:
+          answer_guesses[current_answer_index] = True
+    else:
+      num_of_incorrect_guesses += 1
+
+#Game is over. Display whether user won or not.
+if num_of_incorrect_guesses < 5:
+  print("Congratulations, you solved the puzzle!")
+else:
+  print("Sorry, you ran out of guess.")
+
+print(f"{answer_characters} is the answer to the puzzle.")
